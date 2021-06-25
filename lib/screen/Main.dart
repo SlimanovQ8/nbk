@@ -1,3 +1,7 @@
+import 'package:a/screen/MoneyManagement.dart';
+import 'package:a/screen/Pay.dart';
+import 'package:a/screen/history.dart';
+import 'package:a/screen/notifications.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatelessWidget {
@@ -7,7 +11,7 @@ class HomePage extends StatelessWidget {
       Scaffold(
 
         backgroundColor: Color(0xff161d2f),
-          /*drawer: Drawer(
+          drawer: Drawer(
             child: Column(
               children: <Widget>[
                 UserAccountsDrawerHeader(
@@ -15,54 +19,68 @@ class HomePage extends StatelessWidget {
                     backgroundColor: Colors.white,
                     child: Icon(Icons.person, size: 50.0,),
                   ),
-                  accountName: Text('User Name'),
-                  accountEmail: Text('examlpe@gmail.com'),
+                  accountName: Text('Suliman Al-Mamari'),
+                  accountEmail: Text('slimanovq8@gmail.com'),
                 ),
                 ListTile(
                   leading: CircleAvatar(
-                    child: Icon(Icons.person_outline,
+                    child: Icon(Icons.history,
                       color: Colors.white,
                       size: 30.0,
                     ),
                   ),
-                  title: Text("Profile Settings"),
+                  title: Text("History"),
                   onTap: () {
 
+                    Navigator.of(context).push(
+                      MaterialPageRoute(builder: (ctx) => History()),);
                   },
                 ),
                 ListTile(
                   leading: CircleAvatar(
-                    child: Icon(Icons.settings,
+                    child: Icon(Icons.notifications_on,
                       color: Colors.white,
                       size: 30.0,
                     ),
                   ),
-                  title: Text("Settings"),
+                  title: Text("Notifications"),
                   onTap: () {
+
+                    Navigator.of(context).push(
+                      MaterialPageRoute(builder: (ctx) => Notifications()),);
+                  },
+                ),
+                ListTile(
+                  leading: CircleAvatar(
+                    child: Icon(Icons.monetization_on,
+                      color: Colors.white,
+                      size: 30.0,
+                    ),
+                  ),
+                  title: Text("MoneyManagement"),
+                  onTap: () {
+
+
+                    Navigator.of(context).push(
+                      MaterialPageRoute(builder: (ctx) => MoneyManagement()),);
+
+
 
                   },
                 ),
-                Divider(),
+
                 ListTile(
                   leading: CircleAvatar(
-                    child: Icon(Icons.help_outline,
+                    child: Icon(Icons.payment,
                       color: Colors.white,
                       size: 30.0,
                     ),
                   ),
-                  title: Text("About us"),
-                  onTap: () {},
-                ),
-                ListTile(
-                  leading: CircleAvatar(
-                    child: Icon(Icons.cached,
-                      color: Colors.white,
-                      size: 30.0,
-                    ),
-                  ),
-                  title: Text("Recenceter"),
+                  title: Text("Pay"),
                   onTap: () {
-                    Navigator.pushNamed(context, '/login');
+                    Navigator.of(context).push(
+                      MaterialPageRoute(builder: (ctx) => AddUser()),);
+
                   },
                 ),
                 ListTile(
@@ -76,27 +94,15 @@ class HomePage extends StatelessWidget {
                 ),
               ],
             ),
-          ),*/
+          ),
 
 
           appBar: AppBar(
 
             backgroundColor: Color(0xff161d2f),
             title: Text("My Account"),
-            leading:  IconButton(
-              icon: Icon(Icons.arrow_back, color: Colors.black, ),
-
-              onPressed: () => Navigator.of(context).push(
-                MaterialPageRoute(builder: (ctx) => HomePage()),),
 
 
-            ),
-            actions: [
-              Icon(Icons.settings),
-              Icon(Icons.search),
-              Icon(Icons.more_vert),
-
-            ],
 
 
           ),
@@ -121,16 +127,16 @@ class HomePage extends StatelessWidget {
                 children: <Widget>[
                   ListTile(
                     leading:
-              ImageIcon(
-                  AssetImage("images/nbkLogo.png"),
+                    ImageIcon(
+                      AssetImage("images/nbkLogo.png"),
 
-              size: 90,
-            ),
+                      size: 90,
+                    ),
                     title: Text("Main Account 123456",
 
 
                       style: TextStyle(
-                        color: Colors.white,
+                          color: Colors.white,
                           fontSize: 20, fontWeight: FontWeight.bold),textAlign: TextAlign.left,),
                   ),
                   Container(
@@ -149,14 +155,13 @@ class HomePage extends StatelessWidget {
                         Expanded(
                           child: Column(
                               children:<Widget>
-                              [ Text("total balance",
+                              [ Text("Total balance",
                                     textAlign: TextAlign.center,
                                     style: TextStyle(fontSize: 15,
                                       color: Colors.white,
                                     )),
                                 Row(
                                     children:<Widget> [
-                                      Icon(Icons.visibility_off),
                                       SizedBox(
                                         width: 25,
                                       ),
@@ -165,6 +170,37 @@ class HomePage extends StatelessWidget {
                                           style: TextStyle(fontSize: 14,
                                             color: Colors.white,
                                           )),
+                                      SizedBox(
+                                        width: 5,
+                                      ),
+                                      GestureDetector(child: Icon(Icons.info_outline), onTap: (){
+                                        showDialog(
+                                            context: context,
+                                            builder: (BuildContext context) =>
+                                                AlertDialog(
+                                                  backgroundColor: Color (0xff343b4b),
+                                                  title: Text("total balance", style: TextStyle(
+
+                                                      color: Color(0xff5496F4)
+                                                  ),),
+                                                  content: Text("Total balance without applying the saving rules", style: TextStyle(
+
+                                                      color: Color(0xff5496F4)
+                                                  ),),
+                                                  actions: [
+
+                                                    TextButton(onPressed: () {
+                                                      Navigator.pop(context);
+                                                    },
+
+                                                      child: Text("OK", style: TextStyle(
+                                                          color: Colors.red
+                                                      ),),
+                                                    ),
+                                                  ],
+                                                )
+                                        );
+                                      },)
 
 
                                     ]
@@ -177,31 +213,29 @@ class HomePage extends StatelessWidget {
                               children:<Widget>
                               [ Text("Available balance",
                                     textAlign: TextAlign.center,
-
                                     style: TextStyle(fontSize: 15,
                                       color: Colors.white,
                                     )),
-                                Text("9,000.000 KD",
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(fontSize: 14,
-                                      color: Colors.white,
-                                    )),
+                                Row(
+                                    children:<Widget> [
+                                      //Icon(Icons.visibility_off),
+
+                                      Text("9,000.000 KD",
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(fontSize: 14,
+                                            color: Colors.white,
+                                          )),
+
+
+                                    ]
+                                ),
                               ]
                           ),
                         )
                       ],
                     ),
                   ),
-                  Row(
-                      children: <Widget> [Expanded(
-                          child:
-                          ImageIcon(
-                            AssetImage("images/nbkLogo.png"),
 
-                            size: 40,
-                          ),
-                      ),]
-                  ),
                 ],
               ),
             ),

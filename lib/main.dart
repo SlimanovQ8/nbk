@@ -1,6 +1,8 @@
 import 'package:a/screen/Main.dart';
 import 'package:a/screen/MoneyManagement.dart';
+import 'package:a/screen/Pay.dart';
 import 'package:a/screen/login.dart';
+import 'package:a/screen/notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -28,18 +30,12 @@ class _MyAppState extends State<MyApp> {
   void initState()
   {
 
-    FirebaseMessaging.instance.getToken().then((value) => {
-      FirebaseFirestore.instance
-          .collection('Cars').doc("DoTfUvV9IXABBNr2Up7N").update({
 
-        'deviceID': value,
-      })
-    });
     FirebaseMessaging messaging = FirebaseMessaging.instance;
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       print('Got a message whilst in the foreground!');
       print('Message data: ${message.data}');
-      if (message.data["tag"] == 'CarStatus')
+      if (message.data["tag"] == 'CarStatuvs')
         {
           print('fg');
         showDialog(
@@ -96,7 +92,7 @@ class _MyAppState extends State<MyApp> {
 
               user = FirebaseAuth.instance.currentUser!.email.toString();
               print(user);
-              return MoneyManagement();
+              return HomePage();
 
             }
             return LoginPage();
