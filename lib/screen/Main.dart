@@ -1,8 +1,16 @@
 import 'package:a/screen/MoneyManagement.dart';
 import 'package:a/screen/Pay.dart';
+import 'package:a/screen/Scan.dart';
 import 'package:a/screen/history.dart';
 import 'package:a/screen/notifications.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';  //for date format
+
+
+import 'Saving.dart';
+import 'login.dart';
 
 class HomePage extends StatelessWidget {
   @override
@@ -83,6 +91,36 @@ class HomePage extends StatelessWidget {
 
                   },
                 ),
+
+                ListTile(
+                  leading: CircleAvatar(
+                    child: Icon(Icons.qr_code,
+                      color: Colors.white,
+                      size: 30.0,
+                    ),
+                  ),
+                  title: Text("Scan"),
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(builder: (ctx) => Scan()),);
+
+
+                  },
+                ),
+                ListTile(
+                  leading: CircleAvatar(
+                    child: Icon(Icons.savings,
+                      color: Colors.white,
+                      size: 30.0,
+                    ),
+                  ),
+                  title: Text("Saving Plan"),
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(builder: (ctx) => Saving()),);
+
+                  },
+                ),
                 ListTile(
                   leading: CircleAvatar(
                     child: Icon(Icons.exit_to_app,
@@ -91,6 +129,14 @@ class HomePage extends StatelessWidget {
                     ),
                   ),
                   title: Text("Logout"),
+                  onTap: ()
+                  {
+                    FirebaseAuth.instance.signOut();
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                          builder: (ctx) => LoginPage()),
+                    );
+                  },
                 ),
               ],
             ),
@@ -109,7 +155,21 @@ class HomePage extends StatelessWidget {
 
 
 
-          body: Container(
+          body:  FutureBuilder (
+          future: FirebaseFirestore.instance.collection('Cards')
+          .where("UserID", isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+          .where("isSelected", isEqualTo: "true").get(),
+    builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+      if (snapshot.data == null) {
+        return Container(
+          child: Center(
+            child: CircularProgressIndicator(),
+          ),
+        );
+      }
+      else
+        {
+          return Container(
             height: 200,
             decoration: new BoxDecoration(
             ),
@@ -130,14 +190,17 @@ class HomePage extends StatelessWidget {
                     ImageIcon(
                       AssetImage("images/nbkLogo.png"),
 
-                      size: 90,
+                      size: 80,
+                      color: Colors.white,
                     ),
-                    title: Text("Main Account 123456",
+                    title: Text("Card Number " + snapshot.data!.docs[0].get("CardNumber").toString().substring(15),
+
 
 
                       style: TextStyle(
                           color: Colors.white,
                           fontSize: 20, fontWeight: FontWeight.bold),textAlign: TextAlign.left,),
+              //      subtitle: ,
                   ),
                   Container(
                     decoration: BoxDecoration(
@@ -150,7 +213,7 @@ class HomePage extends StatelessWidget {
                     child: Row(
                       children: <Widget>[
                         SizedBox(
-                          width: 100,
+                          width: 40,
                         ),
                         Expanded(
                           child: Column(
@@ -165,13 +228,13 @@ class HomePage extends StatelessWidget {
                                       SizedBox(
                                         width: 25,
                                       ),
-                                      Text("**** KD",
+                                      Text(snapshot.data!.docs[0].get("ActualBalance").toString().substring(0, snapshot.data!.docs[0].get("ActualBalance").toString().indexOf('.') + 2) +" KD",
                                           textAlign: TextAlign.center,
                                           style: TextStyle(fontSize: 14,
                                             color: Colors.white,
                                           )),
                                       SizedBox(
-                                        width: 5,
+                                        width: 3,
                                       ),
                                       GestureDetector(child: Icon(Icons.info_outline), onTap: (){
                                         showDialog(
@@ -216,11 +279,14 @@ class HomePage extends StatelessWidget {
                                     style: TextStyle(fontSize: 15,
                                       color: Colors.white,
                                     )),
+                                SizedBox(
+                                  width: 40,
+                                ),
                                 Row(
                                     children:<Widget> [
                                       //Icon(Icons.visibility_off),
 
-                                      Text("9,000.000 KD",
+                                      Text(snapshot.data!.docs[0].get("AvailableBalance").toString().substring(0, snapshot.data!.docs[0].get("AvailableBalance").toString().indexOf('.') + 2) +" KD",
                                           textAlign: TextAlign.center,
                                           style: TextStyle(fontSize: 14,
                                             color: Colors.white,
@@ -239,7 +305,11 @@ class HomePage extends StatelessWidget {
                 ],
               ),
             ),
-          ) // This trailing
+          ); // This trailing
+        }
+    }
+          )
+
 
       );
   }

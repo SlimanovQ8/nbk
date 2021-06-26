@@ -82,15 +82,90 @@ class _QRScanPageState extends State<AddUser> {
         await FirebaseFirestore.instance.collection("Cards").doc("Bp2iTDI0Zn2NN02DgQPq").get().then((value) {
           double A = double.parse(DisNum);
           double B = double.parse(value.get("AvailableBalance"));
+          double ST = double.parse(value.get("SavingTotal"));
           double R = double.parse(value.get("RemainingAmount")) - A;
+          String isActive = value.get("isSaving");
+          String isOne = value.get("Plan");
+
           double C = B - A;
+          if (isActive == true.toString() && A % 1 != 0)
+          {
+
+
+            if (isOne == true.toString())
+            {
+              double rem = A - A.toInt();
+              rem = 1 - rem;
+              ST += rem;
+              double F = C - 1;
+              double D = R - 1;
+
+
+
+              FirebaseFirestore.instance.collection("Cards").doc("Bp2iTDI0Zn2NN02DgQPq").update({
+                "AvailableBalance": F.toString(),
+                "RemainingAmount": D.toString(),
+                "ActualBalance":  C.toString(),
+                "SavingTotal":  ST.toString(),
+              });
+              DateTime dateTime = Timestamp.now().toDate();
+              String date = DateFormat.yMd().add_jm().format(dateTime);
+
+              FirebaseFirestore.instance.collection("Notifications").add({
+                "CardNumber": value.get("CardNumber"),
+                "AvailableBalance": C.toString(),
+                "RemainingAmount": D.toString(),
+
+                "amount": DisNum,
+                "Time": Timestamp.now().toDate(),
+                "message": "Your credit card " + value.get("CardNumber").toString().substring(15) + " has been debited with " + A.toString() +
+                    "KWD from talabat on " + date + " Your remaining balance is " + C.toString() + " KWD",
+                "UserID": FirebaseAuth.instance.currentUser!.uid,
+                "isSelected": false.toString(),
+                "Category": "Unknown",
+              });
+            }
+            else
+              {
+
+                ST += 0.5;
+                double F = C - 0.5;
+                double D = R - 0.5;
+
+                FirebaseFirestore.instance.collection("Cards").doc("Bp2iTDI0Zn2NN02DgQPq").update({
+                  "AvailableBalance": F.toString(),
+                  "RemainingAmount": D.toString(),
+                  "ActualBalance":  C.toString(),
+                  "SavingTotal":  ST.toString(),
+
+                });
+                DateTime dateTime = Timestamp.now().toDate();
+                String date = DateFormat.yMd().add_jm().format(dateTime);
+
+                FirebaseFirestore.instance.collection("Notifications").add({
+                  "CardNumber": value.get("CardNumber"),
+                  "AvailableBalance": F.toString(),
+                  "RemainingAmount": D.toString(),
+
+                  "amount": DisNum,
+                  "Time": Timestamp.now().toDate(),
+                  "message": "Your credit card " + value.get("CardNumber").toString().substring(15) + " has been debited with " + A.toString() +
+                      "KWD from talabat on " + date + " Your remaining balance is " + C.toString() + " KWD",
+                  "UserID": FirebaseAuth.instance.currentUser!.uid,
+                  "isSelected": false.toString(),
+                  "Category": "Unknown",
+                });
+              }
+          }
+          else
           FirebaseFirestore.instance.collection("Cards").doc("Bp2iTDI0Zn2NN02DgQPq").update({
             "AvailableBalance": C.toString(),
+            "ActualBalance": C.toString(),
             "RemainingAmount": R.toString(),
           });
           DateTime dateTime = Timestamp.now().toDate();
           String date = DateFormat.yMd().add_jm().format(dateTime);
-          
+
           FirebaseFirestore.instance.collection("Notifications").add({
             "CardNumber": value.get("CardNumber"),
             "AvailableBalance": C.toString(),
@@ -179,17 +254,22 @@ class _QRScanPageState extends State<AddUser> {
                         margin: EdgeInsets.all(20),
                         child: new TextFormField(
                           autovalidateMode: AutovalidateMode.always,
-                          focusNode: FocusNode(),
                           decoration: const InputDecoration(
                             hintText: 'Amount',
                             labelText: 'Amount',
                           ),
                           keyboardType: TextInputType.phone,
                           inputFormatters: [
-                            FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
                           ],
                           onChanged: (String s )
                           {
+                            double b = double.parse(s);
+                            int d = b.toInt();
+                            print(d);
+                                if (b % 1 == 0)
+                              {
+                                print(b);
+                                }
                             setState(() {
                               disNumber = s;
                             });

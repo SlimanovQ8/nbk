@@ -116,7 +116,8 @@ class MM extends State<MoneyManagement> {
                               style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 15, fontWeight: FontWeight.bold),textAlign: TextAlign.left,),
-                            subtitle: Text("  Available Balance \n " + snapshot.data!.docs[0].get('AvailableBalance') + "\n Remaining Balance \n " + snapshot.data!.docs[0].get("RemainingAmount")
+                            subtitle: Text("  Available Balance \n " + snapshot.data!.docs[0].get('AvailableBalance').toString().substring(0,  snapshot.data!.docs[0].get('AvailableBalance').toString().indexOf('.') + 2)
+                                + "\n Remaining Balance \n " + snapshot.data!.docs[0].get("RemainingAmount").toString().substring(0,  snapshot.data!.docs[0].get('RemainingAmount').toString().indexOf('.') + 2)
                               ,
                               style: TextStyle(
                                   color: Colors.white,
